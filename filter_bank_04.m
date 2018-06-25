@@ -10,7 +10,7 @@ for i=1:size(x,1)
     x_h_H_tilde(i,:) = H_tilde(x(i,:));
     x_h_G_tilde(i,:) = G_tilde(x(i,:));
 end
-image_plot(uint8(x_h_H_tilde),uint8(x_h_G_tilde));
+image_plot(uint8(x_h_H_tilde),'Horizontal H~ Filter',uint8(x_h_G_tilde),'Horizontal G~ Filter');
 waitforbuttonpress;
 
 % vertical filtering with H~(z^-1) and G~(z^-1)
@@ -20,7 +20,7 @@ for i=1:size(x,1)
     x_v_H_tilde(:,i) = H_tilde(x(:,i)')';
     x_v_G_tilde(:,i) = G_tilde(x(:,i)')';
 end
-image_plot(uint8(x_v_H_tilde),uint8(x_v_G_tilde));
+image_plot(uint8(x_v_H_tilde),'Vertical H~ Filter',uint8(x_v_G_tilde),'Vertical G~ Filter');
 waitforbuttonpress;
 
 % horizontal downsampling with a factor of 2
@@ -30,7 +30,7 @@ for i=1:size(x,1)
     x_h_H_down(i,:) = downsample(x_h_H_tilde(i,:),2);
     x_h_G_down(i,:) = downsample(x_h_G_tilde(i,:),2);
 end
-image_plot(uint8(x_h_H_down),uint8(x_h_G_down));
+image_plot(uint8(x_h_H_down),'Horizontal downsampling',uint8(x_h_G_down),'Horizontal downsampling');
 waitforbuttonpress;
 
 % vertical downsampling with a factor of 2
@@ -40,7 +40,7 @@ for i=1:size(x,1)
     x_v_H_down(:,i) = downsample(x_v_H_tilde(:,i)',2);
     x_v_G_down(:,i) = downsample(x_v_G_tilde(:,i)',2);
 end
-image_plot(uint8(x_v_H_down),uint8(x_v_G_down));
+image_plot(uint8(x_v_H_down),'Vertical downsampling',uint8(x_v_G_down),'Vertical downsampling');
 waitforbuttonpress;
 
 % synthesis part
@@ -52,7 +52,7 @@ for i=1:size(x_h_H_up,1)
     x_h_H_up(i,:) = upsample(x_h_H_down(i,:),2);
     x_h_G_up(i,:) = upsample(x_h_G_down(i,:),2);
 end
-image_plot(uint8(x_h_H_up),uint8(x_h_G_up));
+image_plot(uint8(x_h_H_up),'Horizontal upsampling',uint8(x_h_G_up),'Horizontal upsampling');
 waitforbuttonpress;
 
 % vertical upsampling with a factor of 2
@@ -62,7 +62,7 @@ for i=1:size(x_v_H_up,2)
     x_v_H_up(:,i) = upsample(x_v_H_down(:,i)',2);
     x_v_G_up(:,i) = upsample(x_v_G_down(:,i)',2);
 end
-image_plot(uint8(x_v_H_up),uint8(x_v_G_up));
+image_plot(uint8(x_v_H_up),'Vertical upsampling',uint8(x_v_G_up),'Vertical upsampling');
 waitforbuttonpress;
 
 % horizontal filtering with H(z) and G(z)
@@ -72,7 +72,7 @@ for i=1:size(x_h_H,1)
     x_h_H(i,:) = H(x_h_H_up(i,:));
     x_h_G(i,:) = G(x_h_G_up(i,:));
 end
-image_plot(uint8(x_h_H),uint8(x_h_G));
+image_plot(uint8(x_h_H),'Horizontal H Filter',uint8(x_h_G),'Horizontal G Filter');
 waitforbuttonpress;
 
 % vertical filtering with H(z) and G(z)
@@ -82,17 +82,19 @@ for i=1:size(x_v_H,2)
     x_v_H(:,i) = H(x_v_H_up(:,i)')';
     x_v_G(:,i) = G(x_v_G_up(:,i)')';
 end
-image_plot(uint8(x_v_H),uint8(x_v_G));
+image_plot(uint8(x_v_H),'Vertical H Filter',uint8(x_v_G),'Vertical G Filter');
 waitforbuttonpress;
 
-x_head = (x_h_G + x_v_G + x_h_H + x_v_H)/4;
-image_plot(x,uint8(x_head));
+x_head = (x_h_G + x_v_G + x_h_H + x_v_H)/3.6;
+image_plot(x,'original image',uint8(x_head),'filtered image');
 
-function p=image_plot(img01,img02)
+function p=image_plot(img01,t1,img02,t2)
     subplot(1,2,1)
     imshow(img01)
+    title(t1)
     subplot(1,2,2)
     imshow(img02)
+    title(t2)
 end
 
 function x_ext=ext_col_zeros(x,a,b)
