@@ -1,5 +1,10 @@
 clear all;
 x = imread('cameraman.tif');
+block_diag = imread('block_diag.jpg');
+
+% plot Block diagram
+imshow(block_diag);
+waitforbuttonpress;
 
 % analysis part
 %
@@ -85,7 +90,8 @@ end
 image_plot(uint8(x_v_H),'Vertical H Filter',uint8(x_v_G),'Vertical G Filter');
 waitforbuttonpress;
 
-x_head = (x_h_G + x_v_G + x_h_H + x_v_H)/3.6;
+% add all 4 filtered images with a subsequent devision by 4 to remove the additional signal power 
+x_head = (x_h_G + x_v_G + x_h_H + x_v_H)/4;
 image_plot(x,'original image',uint8(x_head),'filtered image');
 
 function p=image_plot(img01,t1,img02,t2)
